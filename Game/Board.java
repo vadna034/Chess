@@ -245,8 +245,8 @@ public class Board {
     // Private Function allowing us to perform a move manually. Only used in the move valid function
     // So that we can check for check after a move has been made
     public void manMovePiece(Piece mPiece, int xPos, int yPos){
-        PieceCollection oppTeam = (mPiece.getColor().equals(Color.WHITE)) ? blackTeam : whiteTeam;
-        Piece killPiece = oppTeam.getPieceOnPosition(xPos, yPos);
+        PieceCollection oppTeam = (Color.WHITE.equals(mPiece.getColor())) ? blackTeam : whiteTeam;
+        Piece killPiece = getPieceOnPosition(xPos, yPos);
 
         // Kills an opponents piece if it was on that position
         if(killPiece != null) oppTeam.removePiece(killPiece);

@@ -3,6 +3,9 @@ import pieces.*;
 
 import java.awt.*;
 
+/**
+ * Class I was using to test the if the queen isValidMove function was working correctly
+ */
 public class QueenTests {
     public static void main(String[] args) {
         Queen newQueen = new Queen(5, 6, Color.WHITE);

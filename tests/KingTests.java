@@ -3,6 +3,9 @@ import pieces.*;
 
 import java.awt.*;
 
+/**
+ * Class I was using to test the if the King isValidMove function was working correctly
+ */
 public class KingTests {
     public static void main(String[] args) {
         King newKing = new King(5,5, Color.WHITE);

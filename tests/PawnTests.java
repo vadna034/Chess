@@ -3,6 +3,9 @@ import pieces.*;
 
 import java.awt.*;
 
+/**
+ * Class I was using to test the if the pawn isValidMove and isValidAttack functions are working correctly
+ */
 public class PawnTests {
     public static void main(String[] args) {
         Pawn newPawn = new Pawn(5, 6, Color.BLACK);

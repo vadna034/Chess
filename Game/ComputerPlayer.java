@@ -13,9 +13,8 @@ public class ComputerPlayer extends Manipulator{
 
     public ComputerPlayer(Board board, Color teamColor){
         m_board = board;
-        m_color = teamColor;
-        m_pieces = (m_color.equals(Color.WHITE)) ? m_board.getWhiteTeam() : m_board.getBlackTeam();
-        m_opp = (m_color.equals(Color.WHITE)) ? m_board.getBlackTeam() : m_board.getWhiteTeam();
+        m_pieces = (teamColor.equals(Color.WHITE)) ? m_board.getWhiteTeam() : m_board.getBlackTeam();
+        m_opp = (teamColor.equals(Color.WHITE)) ? m_board.getBlackTeam() : m_board.getWhiteTeam();
     }
 
     public void movePiece() {
@@ -29,34 +28,48 @@ public class ComputerPlayer extends Manipulator{
         Piece mPiece = null;
         ArrayList<Piece> pieces = m_pieces.getPieces();
         Piece movePiece = null;
+        Piece killPiece = null;
+        Piece testPiece;
 
-        Board copyBoard;
+
         int score = -2110000000;
         int newScore;
         Random random = new Random();
 
-        for(Piece testPiece : pieces){
-            curX = testPiece.getX();
-            curY = testPiece.getY();
-            for(int i=0; i<8; i++){
-                for(int j=0; j<8; j++){
-                    if(testPiece.isValidMove(i, j) || testPiece.isValidAttack(i, j)){
-                        copyBoard = m_board.deepCopy();
-                        mPiece = copyBoard.getPieceOnPosition(curX, curY);
-                        if(copyBoard.computerMovePiece(mPiece, i, j) == 0) {
+        for(int xPos = 0; xPos<8; xPos++) {
+            for (int yPos = 0; yPos < 8; yPos++) {
+                testPiece = m_board.getPieceOnPosition(xPos, yPos);
+                if(testPiece == null || testPiece.getColor() != m_pieces.getColor()) continue;
+                curX = testPiece.getX();
+                curY = testPiece.getY();
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 8; j++) {
+                        if (testPiece.isValidMove(i, j) || testPiece.isValidAttack(i, j)) {
+                            mPiece = m_board.getPieceOnPosition(curX, curY);
+                            killPiece = m_board.getPieceOnPosition(i, j);
 
-                            newScore = getOppMove(copyBoard, 1);
+                            if (m_board.computerMovePiece(mPiece, i, j) == 0) {
 
-                            if (newScore > score) {
-                                movePiece = testPiece;
-                                score = newScore;
-                                newX = i;
-                                newY = j;
-                            } else if (newScore == score && random.nextInt(7) == 0) {
-                                movePiece = testPiece;
-                                score = newScore;
-                                newX = i;
-                                newY = j;
+                                newScore = getOppMove(m_board, 1);
+
+                                mPiece.setX(curX);
+                                mPiece.setY(curY);
+
+
+                                m_opp.addPiece(killPiece);
+
+
+                                if (newScore > score) {
+                                    movePiece = testPiece;
+                                    score = newScore;
+                                    newX = i;
+                                    newY = j;
+                                } else if (newScore == score && random.nextInt(7) == 0) {
+                                    movePiece = testPiece;
+                                    score = newScore;
+                                    newX = i;
+                                    newY = j;
+                                }
                             }
                         }
                     }
@@ -69,20 +82,20 @@ public class ComputerPlayer extends Manipulator{
             m_board.printBoard();
             exit(1);
         }
-        System.out.printf("Last move: (%d,%d) to (%d,%d)\n", movePiece.getX(), movePiece.getY(), newX, newY);
+        System.out.printf("Last move: (%d,%d) to (%d,%d)\n", movePiece.getY(), movePiece.getX(), newY, newX);
         m_board.computerMovePiece(movePiece, newX, newY);
     }
 
     public int getOppMove(Board moveBoard, int iteration){
-        PieceCollection oppTeam = (Color.WHITE.equals(m_color)) ? moveBoard.getBlackTeam() : moveBoard.getWhiteTeam();
-        PieceCollection curTeam = (Color.WHITE.equals(m_color)) ? moveBoard.getWhiteTeam() : moveBoard.getBlackTeam();
+        PieceCollection oppTeam = m_opp;
+        PieceCollection curTeam = m_pieces;
         int score = 200000000;
         int curX;
         int curY;
-        Board copyBoard = null;
 
-        ArrayList<Piece> oppPieces = oppTeam.getPieces();
-        Piece mPiece;
+        Piece killPiece;
+        Piece testPiece;
+
 
         if(moveBoard.check(curTeam)){
             return -200000000;
@@ -100,33 +113,43 @@ public class ComputerPlayer extends Manipulator{
             return moveBoard.getScore(curTeam);
         }
 
-        for(Piece testPiece : oppPieces){
-            curX = testPiece.getX();
-            curY = testPiece.getY();
-            for(int i=0; i<8; i++){
-                for(int j=0; j<8; j++){
-                    if(testPiece.isValidMove(i, j) || testPiece.isValidAttack(i, j)){
-                        copyBoard = moveBoard.deepCopy();
-                        mPiece = copyBoard.getPieceOnPosition(curX, curY);
-                        if(copyBoard.computerMovePiece(mPiece, i, j) == 1) continue;
-                        int scoreWhite = copyBoard.getWhiteTeam().getScore();
-                        int scoreBlack = copyBoard.getBlackTeam().getScore();
+        for(int xPos = 0; xPos < 8; xPos++) {
+            for (int yPos = 0; yPos < 8; yPos++) {
+                testPiece = m_board.getPieceOnPosition(xPos, yPos);
+                if (testPiece == null || oppTeam.getColor() != testPiece.getColor()) continue;
+                curX = testPiece.getX();
+                curY = testPiece.getY();
+                for(int i=0; i<8; i++){
+                    for(int j=0; j<8; j++){
+                        if(testPiece.isValidMove(i, j) || testPiece.isValidAttack(i, j)){
 
-                        score = Math.min(score, getUserMove(copyBoard, iteration + 1));
+
+                            killPiece = m_board.getPieceOnPosition(i, j);
+                            if(m_board.computerMovePiece(testPiece, i, j) == 1) continue;
+
+                            score = Math.min(score, getUserMove(m_board, iteration + 1));
+
+                            testPiece.setX(curX);
+                            testPiece.setY(curY);
+                            curTeam.addPiece(killPiece);
+                        }
                     }
                 }
             }
         }
+
+
         return score;
     }
 
     public int getUserMove(Board moveBoard, int iteration){
-        PieceCollection curTeam = (Color.WHITE.equals(m_color)) ? moveBoard.getWhiteTeam() : moveBoard.getBlackTeam();
-        PieceCollection oppTeam = (Color.WHITE.equals(m_color)) ? moveBoard.getBlackTeam() : moveBoard.getWhiteTeam();
+        PieceCollection curTeam = m_pieces;
+        PieceCollection oppTeam = m_opp;
         int score = -200000000;
         int curX;
         int curY;
-        Board copyBoard = null;
+        Piece killPiece;
+        Piece testPiece;
 
         if(moveBoard.check(oppTeam)){
             return 200000000;
@@ -144,20 +167,29 @@ public class ComputerPlayer extends Manipulator{
             return moveBoard.check(oppTeam) ? moveBoard.getScore(curTeam) + 1 : moveBoard.getScore(curTeam);
         }
 
-        ArrayList<Piece> curPieces = curTeam.getPieces();
         Piece mPiece;
 
-        for(Piece testPiece : curPieces){
-            curX = testPiece.getX();
-            curY = testPiece.getY();
-            for(int i=0; i<8; i++){
-                for(int j=0; j<8; j++){
-                    if(testPiece.isValidMove(i, j) || testPiece.isValidAttack(i, j)){
-                        copyBoard = moveBoard.deepCopy();
-                        mPiece = copyBoard.getPieceOnPosition(curX, curY);
-                        if(copyBoard.computerMovePiece(mPiece, i, j) == 1) continue;
+        for(int xPos = 0; xPos<8; xPos++) {
+            for (int yPos = 0; yPos < 8; yPos++) {
+                testPiece = m_board.getPieceOnPosition(xPos, yPos);
+                if (testPiece == null || curTeam.getColor() != testPiece.getColor()) continue;
+                curX = testPiece.getX();
+                curY = testPiece.getY();
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 8; j++) {
+                        if (testPiece.isValidMove(i, j) || testPiece.isValidAttack(i, j)) {
 
-                        score = Math.max(score, getOppMove(copyBoard, iteration + 1));
+                            mPiece = testPiece;
+                            killPiece = m_board.getPieceOnPosition(i, j);
+
+                            if (m_board.computerMovePiece(mPiece, i, j) == 1) continue;
+
+                            score = Math.max(score, getOppMove(m_board, iteration + 1));
+
+                            mPiece.setX(curX);
+                            mPiece.setY(curY);
+                            oppTeam.addPiece(killPiece);
+                        }
                     }
                 }
             }

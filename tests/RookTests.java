@@ -3,6 +3,9 @@ import pieces.*;
 
 import java.awt.*;
 
+/**
+ * Class I was using to test the if the rook isValidMove function was working correctly
+ */
 public class RookTests {
     public static void main(String[] args) {
         Rook newRook = new Rook(5,4, Color.WHITE);

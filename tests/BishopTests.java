@@ -3,6 +3,9 @@ import pieces.*;
 
 import java.awt.*;
 
+/**
+ * Class I was using to test the if the bishop isValidMove function was working correctly
+ */
 public class BishopTests {
     public static void main(String[] args) {
         Bishop newBishop = new Bishop(4, 4, Color.WHITE); //Instantiate a new bishop at position 4, 4

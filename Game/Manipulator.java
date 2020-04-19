@@ -16,7 +16,7 @@ public abstract class Manipulator {
     }
 
     public String toString(){
-        return (m_color.equals(Color.WHITE)) ? "WHITE" : "BLACK";
+        return (m_pieces.getColor().equals(Color.WHITE)) ? "WHITE" : "BLACK";
     }
 
     public boolean isCheckMated(){

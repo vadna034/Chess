@@ -12,6 +12,7 @@ import static java.lang.System.in;
 public class PieceCollection {
     public ArrayList<Piece> m_pieces;
     private Color m_color;
+    private Piece m_king;
 
 
     public PieceCollection(Color inColor){
@@ -34,17 +35,25 @@ public class PieceCollection {
     public PieceCollection(Color inColor, ArrayList<Piece> inPieces){
         m_color = inColor;
         m_pieces = inPieces;
+
+        for(Piece testPiece : m_pieces){
+            if(testPiece.getType() == Type.KING){
+                m_king = testPiece;
+            }
+        }
     }
 
 
     private void setUpAsWhite(){
         m_pieces.clear();
+
+        m_king = new King(3,0, m_color);
+
+
         m_pieces.add(new Rook(0,0, m_color));
         m_pieces.add(new Horse(1,0, m_color));
         m_pieces.add(new Bishop(2,0, m_color));
-
-        m_pieces.add(new King(3,0, m_color));
-
+        m_pieces.add(m_king);
         m_pieces.add(new Queen(4,0, m_color));
         m_pieces.add(new Bishop(5,0, m_color));
         m_pieces.add(new Horse(6,0, m_color));
@@ -57,12 +66,12 @@ public class PieceCollection {
     
     private void setUpAsBlack(){
         m_pieces.clear();
+        m_king = new King(3,7, m_color);
+
         m_pieces.add(new Rook(0,7, m_color));
         m_pieces.add(new Horse(1,7, m_color));
         m_pieces.add(new Bishop(2,7, m_color));
-
-        m_pieces.add(new King(3,7, m_color));
-
+        m_pieces.add(m_king);
         m_pieces.add(new Queen(4,7, m_color));
         m_pieces.add(new Bishop(5,7, m_color));
         m_pieces.add(new Horse(6,7, m_color));
@@ -88,10 +97,7 @@ public class PieceCollection {
     }
 
     public Piece getKing(){
-        for(Piece testPiece : m_pieces){
-            if(testPiece.getType() == Type.KING) return testPiece;
-        }
-        return null;
+        return m_king;
     }
 
     // Performs a deep copy of the team
@@ -108,6 +114,10 @@ public class PieceCollection {
 
     public void removePiece(Piece rPiece){
         m_pieces.remove(rPiece);
+    }
+
+    public void addPiece(Piece aPiece){
+        if(aPiece != null && aPiece.getColor() == m_color) m_pieces.add(aPiece);
     }
 
     public ArrayList<Piece> getPieces(){

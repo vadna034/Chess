@@ -4,6 +4,9 @@ import pieces.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Class I was using to test the if the horse isValidMove function was working correctly
+ */
 public class HorseTests {
     public static void main(String[] args) {
         Horse newHorse = new Horse(5,6, Color.WHITE); //Instantiates a new horse object at position (5, 6)

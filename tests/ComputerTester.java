@@ -36,7 +36,8 @@ public class ComputerTester {
             }
 
             curMover.movePiece();
-
+            System.out.println("Black Score: " + blackPlayer.getPieces().getScore());
+            System.out.println("White Score: " + whitePlayer.getPieces().getScore());
             curMover = (curMover.equals(whitePlayer)) ? blackPlayer : whitePlayer;
         }
 

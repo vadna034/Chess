@@ -1,6 +1,6 @@
 //Usually you will require both swing and awt packages
 // even if you are working with just swings.
-import GUI.BoardFrame;
+import GUI.BoardPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +47,13 @@ class test {
     */
 
     public static void main(String[] args) {
-        JFrame frame = new BoardFrame();
+        JFrame frame = new JFrame("Chess");
+        frame.setLayout(new BorderLayout());
+        BoardPanel test = new BoardPanel();
 
+        frame.setSize(500, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(test);
+        frame.setVisible(true);
     }
 }

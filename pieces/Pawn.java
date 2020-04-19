@@ -19,7 +19,6 @@ public class Pawn extends Piece{
         m_color = color;
         m_score = 1;
         m_type = Type.PAWN;
-        m_hasMoved = false;
 
         if(Color.WHITE.equals(m_color)){
             m_icon = new ImageIcon("src/images/wPawn.png");
@@ -34,9 +33,6 @@ public class Pawn extends Piece{
      */
     public Pawn copyPiece(){
         Pawn newPawn = new Pawn(m_x, m_y, m_color);
-        if(m_hasMoved){
-            newPawn.setHasMoved();
-        }
         return newPawn;
     }
 
@@ -65,6 +61,12 @@ public class Pawn extends Piece{
             yDiff *= -1;
         }
 
-        return newX == m_x && (yDiff == 1 || (yDiff == 2 && ! m_hasMoved));
+        boolean canDouble = false;
+
+        if((m_color == Color.WHITE && m_y == 1) || m_color == Color.BLACK && m_y == 6){
+            canDouble = true;
+        }
+
+        return newX == m_x && (yDiff == 1 || (yDiff == 2 && canDouble));
     }
 }

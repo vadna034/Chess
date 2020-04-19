@@ -109,7 +109,7 @@ public class ComputerPlayer extends Manipulator{
             return 0;
         }
 
-        if(iteration >= 4){
+        if(iteration >= 3){
             return moveBoard.getScore(curTeam);
         }
 
@@ -163,7 +163,7 @@ public class ComputerPlayer extends Manipulator{
             return 0;
         }
 
-        if(iteration >= 4){
+        if(iteration >= 3){
             return moveBoard.check(oppTeam) ? moveBoard.getScore(curTeam) + 1 : moveBoard.getScore(curTeam);
         }
 
@@ -195,5 +195,80 @@ public class ComputerPlayer extends Manipulator{
             }
         }
         return score;
+    }
+
+    public ArrayList<Integer> movePieceHelper() {
+        //m_board.printBoard();
+        System.out.println(this.toString() + " to move");
+
+        int newX = -1;
+        int newY = -1;
+        int curX;
+        int curY;
+        Piece mPiece = null;
+        ArrayList<Piece> pieces = m_pieces.getPieces();
+        Piece movePiece = null;
+        Piece killPiece = null;
+        Piece testPiece;
+
+
+        int score = -2110000000;
+        int newScore;
+        Random random = new Random();
+
+        for(int xPos = 0; xPos<8; xPos++) {
+            for (int yPos = 0; yPos < 8; yPos++) {
+                testPiece = m_board.getPieceOnPosition(xPos, yPos);
+                if(testPiece == null || testPiece.getColor() != m_pieces.getColor()) continue;
+                curX = testPiece.getX();
+                curY = testPiece.getY();
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 8; j++) {
+                        if (testPiece.isValidMove(i, j) || testPiece.isValidAttack(i, j)) {
+                            mPiece = m_board.getPieceOnPosition(curX, curY);
+                            killPiece = m_board.getPieceOnPosition(i, j);
+
+                            if (m_board.computerMovePiece(mPiece, i, j) == 0) {
+
+                                newScore = getOppMove(m_board, 1);
+
+                                mPiece.setX(curX);
+                                mPiece.setY(curY);
+
+
+                                m_opp.addPiece(killPiece);
+
+
+                                if (newScore > score) {
+                                    movePiece = testPiece;
+                                    score = newScore;
+                                    newX = i;
+                                    newY = j;
+                                } else if (newScore == score && random.nextInt(7) == 0) {
+                                    movePiece = testPiece;
+                                    score = newScore;
+                                    newX = i;
+                                    newY = j;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if(movePiece == null){
+            System.out.println("No move found in this position");
+            m_board.printBoard();
+            exit(1);
+        }
+        System.out.printf("Last move: (%d,%d) to (%d,%d)\n", movePiece.getY(), movePiece.getX(), newY, newX);
+        ArrayList<Integer> vals = new ArrayList<>();
+        vals.add(movePiece.getX());
+        vals.add(movePiece.getY());
+        vals.add(newX);
+        vals.add(newY);
+        m_board.computerMovePiece(movePiece, newX, newY);
+        return vals;
     }
 }

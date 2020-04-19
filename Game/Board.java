@@ -178,6 +178,14 @@ public class Board {
         return (rPiece != null) ? rPiece : blackTeam.getPieceOnPosition(xPos, yPos);
     }
 
+    public boolean checkmated(Color inColor){
+        if(inColor == Color.WHITE){
+            return check(whiteTeam) && !teamCanMove(whiteTeam);
+        } else{
+            return check(blackTeam) && !teamCanMove(blackTeam);
+        }
+    }
+
     public boolean checkmated(PieceCollection testPieces){
         return check(testPieces) && !teamCanMove(testPieces);
     }

@@ -49,8 +49,6 @@ public class Tutorial extends JPanel{
     public static void main(String[] Args){
         BoardFrame frame = new BoardFrame();
 
-        frame.setSize(500, 500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+
     }
 }
